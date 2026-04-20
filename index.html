@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Comentarios · Tu opinión cuenta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f3efe6;
+    --paper-dark: #e8e2d4;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --ink-faint: #8a8a82;
+    --accent: #c73e1d;
+    --accent-soft: #e8b4a6;
+    --success: #2d5a3d;
+    --border: #2a2a2a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(199, 62, 29, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(45, 90, 61, 0.04) 0%, transparent 40%);
+    padding: 40px 20px 80px;
+  }
+
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Header */
+  .masthead {
+    border-bottom: 1.5px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .masthead .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 64px;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(44px, 7vw, 76px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--accent);
+  }
+
+  .lede {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 520px;
+    font-weight: 300;
+  }
+
+  /* Progress */
+  .progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 48px;
+  }
+
+  .progress-step {
+    flex: 1;
+    height: 3px;
+    background: var(--paper-dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-step.active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    animation: fill 0.6s ease forwards;
+  }
+
+  @keyframes fill {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+
+  /* Form sections */
+  .section {
+    margin-bottom: 56px;
+    padding-bottom: 48px;
+    border-bottom: 1px dashed rgba(26, 26, 26, 0.15);
+  }
+
+  .section:last-of-type { border-bottom: none; }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+    line-height: 1.15;
+  }
+
+  /* Fields */
+  .field { margin-bottom: 24px; }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  label .req {
+    color: var(--accent);
+    margin-left: 2px;
+  }
+
+  label .opt {
+    font-weight: 400;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-left: 6px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea,
+  select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    padding: 10px 0;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    transition: border-color 0.2s ease, padding-left 0.2s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-bottom-color: var(--accent);
+    padding-left: 4px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    border: 1.5px solid var(--border);
+    padding: 14px;
+  }
+
+  textarea:focus { padding-left: 14px; }
+
+  /* Category cards */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .cat-card {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .cat-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .cat-card-inner {
+    border: 1.5px solid var(--border);
+    background: var(--paper);
+    padding: 18px 16px;
+    transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cat-card:hover .cat-card-inner {
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0 var(--border);
+  }
+
+  .cat-card input:checked ~ .cat-card-inner {
+    background: var(--ink);
+    color: var(--paper);
+    transform: translate(-3px, -3px);
+    box-shadow: 3px 3px 0 var(--accent);
+  }
+
+  .cat-icon {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-style: italic;
+    line-height: 1;
+  }
+
+  .cat-label {
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .cat-desc {
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.4;
+  }
+
+  .cat-card input:checked ~ .cat-card-inner .cat-desc {
+    color: rgba(243, 239, 230, 0.7);
+  }
+
+  /* Rating */
+  .rating {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .rating label {
+    flex: 1;
+    cursor: pointer;
+    text-align: center;
+    padding: 14px 0;
+    border: 1.5px solid var(--border);
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    margin-bottom: 0;
+    transition: all 0.2s ease;
+    background: var(--paper);
+  }
+
+  .rating input { display: none; }
+
+  .rating label:hover {
+    background: var(--paper-dark);
+  }
+
+  .rating input:checked + label {
+    background: var(--accent);
+    color: var(--paper);
+    border-color: var(--accent);
+  }
+
+  .rating-legend {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* Checkboxes / radios list */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .opt-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 400;
+    margin-bottom: 0;
+  }
+
+  .opt-item:hover {
+    border-color: var(--border);
+    background: var(--paper-dark);
+  }
+
+  .opt-item input {
+    margin-top: 3px;
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  /* Conditional section */
+  .conditional {
+    display: none;
+    margin-top: 32px;
+    padding: 28px;
+    background: var(--paper-dark);
+    border-left: 3px solid var(--accent);
+    position: relative;
+    animation: slideDown 0.4s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .conditional.show { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .conditional-tag {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--accent);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+  }
+
+  /* Submit */
+  .submit-wrap {
+    margin-top: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  button[type="submit"] {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 18px 36px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  button[type="submit"]:hover {
+    background: var(--accent);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--border);
+  }
+
+  button[type="submit"]:active {
+    transform: translate(0, 0);
+    box-shadow: none;
+  }
+
+  .privacy-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    max-width: 260px;
+    line-height: 1.6;
+  }
+
+  /* Success state */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 80px 20px;
+    animation: slideDown 0.5s ease;
+  }
+
+  .success-state.show { display: block; }
+
+  .success-state .mark {
+    font-family: 'Fraunces', serif;
+    font-size: 120px;
+    font-style: italic;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .success-state h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+
+  .success-state p {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--ink-soft);
+    font-weight: 300;
+  }
+
+  @media (max-width: 560px) {
+    .cat-grid { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 44px; }
+    .section-title { font-size: 24px; }
+    .rating label { font-size: 18px; padding: 12px 0; }
+    .masthead { font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="wrap">
+
+    <div class="masthead">
+      <span><span class="dot"></span>Encuesta activa · Vol. 04</span>
+      <span id="date-stamp">—</span>
+    </div>
+
+    <form id="feedback-form">
+      <header class="hero">
+        <div class="eyebrow">— Formulario de comentarios</div>
+        <h1>Queremos<br>oír <em>tu voz</em>.</h1>
+        <p class="lede">Dedica tres minutos a contarnos cómo fue tu experiencia. Cada respuesta cambia algo.</p>
+      </header>
+
+      <div class="progress" aria-hidden="true">
+        <div class="progress-step active"></div>
+        <div class="progress-step" id="p2"></div>
+        <div class="progress-step" id="p3"></div>
+        <div class="progress-step" id="p4"></div>
+      </div>
+
+      <!-- SECCIÓN 1: Datos -->
+      <section class="section">
+        <span class="section-num">01 / Sobre ti</span>
+        <h2 class="section-title">Para empezar, cuéntanos quién eres.</h2>
+
+        <div class="field">
+          <label for="name">Nombre<span class="req">*</span></label>
+          <input type="text" id="name" name="name" required placeholder="Tu nombre">
+        </div>
+
+        <div class="field">
+          <label for="email">Correo electrónico <span class="opt">(opcional, si quieres respuesta)</span></label>
+          <input type="email" id="email" name="email" placeholder="tu@correo.com">
+        </div>
+      </section>
+
+      <!-- SECCIÓN 2: Categoría -->
+      <section class="section">
+        <span class="section-num">02 / Tema</span>
+        <h2 class="section-title">¿Sobre qué quieres hablar?</h2>
+
+        <div class="cat-grid" role="radiogroup">
+          <label class="cat-card">
+            <input type="radio" name="category" value="producto" required>
+            <div class="cat-card-inner">
+              <span class="cat-icon">❖</span>
+              <span class="cat-label">Producto</span>
+              <span class="cat-desc">Calidad, diseño, funcionalidades</span>
+            </div>
+          </label>
+
+          <label class="cat-card">
+            <input type="radio" name="category" value="servicio">
+            <div class="cat-card-inner">
+              <span class="cat-icon">✦</span>
+              <span class="cat-label">Atención</span>
+              <span class="cat-desc">Servicio al cliente, soporte</span>
+            </div>
+          </label>
+
+          <label class="cat-card">
+            <input type="radio" name="category" value="envio">
+            <div class="cat-card-inner">
+              <span class="cat-icon">↗</span>
+              <span class="cat-label">Envío</span>
+              <span class="cat-desc">Entrega, embalaje, tiempos</span>
+            </div>
+          </label>
+
+          <label class="cat-card">
+            <input type="radio" name="category" value="web">
+            <div class="cat-card-inner">
+              <span class="cat-icon">◈</span>
+              <span class="cat-label">Sitio web / App</span>
+              <span class="cat-desc">Navegación, pago, uso</span>
+            </div>
+          </label>
+
+          <label class="cat-card">
+            <input type="radio" name="category" value="otro">
+            <div class="cat-card-inner">
+              <span class="cat-icon">∞</span>
+              <span class="cat-label">Otro</span>
+              <span class="cat-desc">Algo que no encaja arriba</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Bloques condicionales -->
+        <div class="conditional" id="cond-producto">
+          <div class="conditional-tag">Producto</div>
+          <div class="field">
+            <label>¿Qué producto compraste?<span class="req">*</span></label>
+            <input type="text" name="producto_nombre" placeholder="Nombre o referencia del producto">
+          </div>
+          <div class="field">
+            <label>¿Qué aspectos valoras?</label>
+            <div class="options">
+              <label class="opt-item"><input type="checkbox" name="producto_aspectos" value="calidad"> Calidad de materiales</label>
+              <label class="opt-item"><input type="checkbox" name="producto_aspectos" value="diseno"> Diseño y estética</label>
+              <label class="opt-item"><input type="checkbox" name="producto_aspectos" value="precio"> Relación calidad-precio</label>
+              <label class="opt-item"><input type="checkbox" name="producto_aspectos" value="funcion"> Funcionalidad</label>
+              <label class="opt-item"><input type="checkbox" name="producto_aspectos" value="durabilidad"> Durabilidad</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Recomendarías este producto?</label>
+            <div class="options">
+              <label class="opt-item"><input type="radio" name="producto_recomienda" value="si"> Sí, sin dudar</label>
+              <label class="opt-item"><input type="radio" name="producto_recomienda" value="tal-vez"> Tal vez, con matices</label>
+              <label class="opt-item"><input type="radio" name="producto_recomienda" value="no"> No lo recomendaría</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="cond-servicio">
+          <div class="conditional-tag">Atención</div>
+          <div class="field">
+            <label>¿Cómo contactaste con nosotros?<span class="req">*</span></label>
+            <select name="servicio_canal">
+              <option value="">Elige un canal</option>
+              <option value="email">Correo electrónico</option>
+              <option value="telefono">Teléfono</option>
+              <option value="chat">Chat en vivo</option>
+              <option value="redes">Redes sociales</option>
+              <option value="presencial">Tienda física</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>¿Se resolvió tu consulta?</label>
+            <div class="options">
+              <label class="opt-item"><input type="radio" name="servicio_resuelto" value="si"> Sí, por completo</label>
+              <label class="opt-item"><input type="radio" name="servicio_resuelto" value="parcial"> Parcialmente</label>
+              <label class="opt-item"><input type="radio" name="servicio_resuelto" value="no"> No se resolvió</label>
+              <label class="opt-item"><input type="radio" name="servicio_resuelto" value="pendiente"> Aún está en proceso</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Cómo describirías al agente que te atendió?</label>
+            <input type="text" name="servicio_agente" placeholder="Ej: amable, rápido, impaciente…">
+          </div>
+        </div>
+
+        <div class="conditional" id="cond-envio">
+          <div class="conditional-tag">Envío</div>
+          <div class="field">
+            <label>Número de pedido <span class="opt">(si lo tienes a mano)</span></label>
+            <input type="text" name="envio_pedido" placeholder="#00000">
+          </div>
+          <div class="field">
+            <label>¿Cómo llegó el paquete?<span class="req">*</span></label>
+            <div class="options">
+              <label class="opt-item"><input type="radio" name="envio_estado" value="perfecto"> Perfecto, en su embalaje</label>
+              <label class="opt-item"><input type="radio" name="envio_estado" value="aceptable"> Aceptable, con marcas menores</label>
+              <label class="opt-item"><input type="radio" name="envio_estado" value="dañado"> Dañado</label>
+              <label class="opt-item"><input type="radio" name="envio_estado" value="no-llego"> No llegó / se perdió</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Llegó en el plazo prometido?</label>
+            <div class="options">
+              <label class="opt-item"><input type="radio" name="envio_plazo" value="antes"> Antes de lo esperado</label>
+              <label class="opt-item"><input type="radio" name="envio_plazo" value="tiempo"> En el plazo indicado</label>
+              <label class="opt-item"><input type="radio" name="envio_plazo" value="tarde"> Con retraso</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="cond-web">
+          <div class="conditional-tag">Sitio web / App</div>
+          <div class="field">
+            <label>¿Desde dónde nos visitaste?<span class="req">*</span></label>
+            <div class="options">
+              <label class="opt-item"><input type="radio" name="web_dispositivo" value="movil"> Móvil</label>
+              <label class="opt-item"><input type="radio" name="web_dispositivo" value="tablet"> Tablet</label>
+              <label class="opt-item"><input type="radio" name="web_dispositivo" value="ordenador"> Ordenador</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Dónde encontraste fricción?</label>
+            <div class="options">
+              <label class="opt-item"><input type="checkbox" name="web_friccion" value="busqueda"> Buscar productos</label>
+              <label class="opt-item"><input type="checkbox" name="web_friccion" value="cuenta"> Crear cuenta / iniciar sesión</label>
+              <label class="opt-item"><input type="checkbox" name="web_friccion" value="pago"> Proceso de pago</label>
+              <label class="opt-item"><input type="checkbox" name="web_friccion" value="velocidad"> Velocidad de carga</label>
+              <label class="opt-item"><input type="checkbox" name="web_friccion" value="ninguna"> Ninguna, todo fluido</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Encontraste lo que buscabas?</label>
+            <div class="options">
+              <label class="opt-item"><input type="radio" name="web_encontro" value="si"> Sí, rápido</label>
+              <label class="opt-item"><input type="radio" name="web_encontro" value="costo"> Sí, pero me costó</label>
+              <label class="opt-item"><input type="radio" name="web_encontro" value="no"> No lo encontré</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conditional" id="cond-otro">
+          <div class="conditional-tag">Otro</div>
+          <div class="field">
+            <label>Cuéntanos, ¿de qué se trata?<span class="req">*</span></label>
+            <textarea name="otro_tema" rows="3" placeholder="Describe brevemente el tema"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 3: Valoración -->
+      <section class="section">
+        <span class="section-num">03 / Valoración</span>
+        <h2 class="section-title">En una escala del 1 al 5…</h2>
+
+        <div class="field">
+          <label>¿Cómo valoras tu experiencia en general?<span class="req">*</span></label>
+          <div class="rating">
+            <input type="radio" id="r1" name="rating" value="1" required><label for="r1">1</label>
+            <input type="radio" id="r2" name="rating" value="2"><label for="r2">2</label>
+            <input type="radio" id="r3" name="rating" value="3"><label for="r3">3</label>
+            <input type="radio" id="r4" name="rating" value="4"><label for="r4">4</label>
+            <input type="radio" id="r5" name="rating" value="5"><label for="r5">5</label>
+          </div>
+          <div class="rating-legend">
+            <span>— Muy mala</span>
+            <span>Excelente —</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 4: Comentarios abiertos -->
+      <section class="section">
+        <span class="section-num">04 / Tus palabras</span>
+        <h2 class="section-title">¿Algo más que debamos saber?</h2>
+
+        <div class="field">
+          <label for="comentarios">Comentarios, sugerencias, historias <span class="opt">(opcional)</span></label>
+          <textarea id="comentarios" name="comentarios" rows="5" placeholder="Escribe con total libertad. Lo leemos todo."></textarea>
+        </div>
+
+        <div class="field">
+          <label class="opt-item" style="padding: 0;">
+            <input type="checkbox" name="contacto" value="si">
+            <span>Quiero que me contactéis para ampliar este comentario</span>
+          </label>
+        </div>
+      </section>
+
+      <div class="submit-wrap">
+        <button type="submit">Enviar comentarios →</button>
+        <p class="privacy-note">Tus datos se tratan de forma confidencial. Nunca compartimos tu información con terceros.</p>
+      </div>
+    </form>
+
+    <!-- Éxito -->
+    <div class="success-state" id="success">
+      <div class="mark">✓</div>
+      <h2>Recibido.</h2>
+      <p>Gracias por el tiempo que nos has dedicado.<br>Leeremos cada palabra.</p>
+    </div>
+
+  </div>
+
+<script>
+  // Fecha
+  const now = new Date();
+  const months = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+  document.getElementById('date-stamp').textContent =
+    String(now.getDate()).padStart(2,'0') + '.' + months[now.getMonth()] + '.' + now.getFullYear();
+
+  // Lógica condicional por categoría
+  const cats = document.querySelectorAll('input[name="category"]');
+  const conds = {
+    producto: document.getElementById('cond-producto'),
+    servicio: document.getElementById('cond-servicio'),
+    envio: document.getElementById('cond-envio'),
+    web: document.getElementById('cond-web'),
+    otro: document.getElementById('cond-otro')
+  };
+
+  cats.forEach(cat => {
+    cat.addEventListener('change', () => {
+      Object.values(conds).forEach(c => c.classList.remove('show'));
+      if (conds[cat.value]) {
+        conds[cat.value].classList.add('show');
+        setTimeout(() => {
+          conds[cat.value].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+      document.getElementById('p2').classList.add('active');
+    });
+  });
+
+  // Progreso visual en otras secciones
+  document.querySelectorAll('input[name="rating"]').forEach(r => {
+    r.addEventListener('change', () => document.getElementById('p3').classList.add('active'));
+  });
+  document.getElementById('comentarios').addEventListener('input', () => {
+    document.getElementById('p4').classList.add('active');
+  });
+
+  // ⚠️ SUSTITUYE por la URL de tu Apps Script (acaba en /exec)
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqW9KZ3mKDxpqRBtXn93P5bCveiIuda_HmZMKqtjDgNvx3z0tOL6ugjBiU6xwSsxoK/exec';
+
+  // Envío a Google Apps Script
+  document.getElementById('feedback-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Enviando…';
+    submitBtn.disabled = true;
+
+    try {
+      const formData = new FormData(form);
+      // Combinamos checkboxes múltiples en una sola cadena por campo
+      const data = {};
+      for (const key of new Set([...formData.keys()])) {
+        const values = formData.getAll(key);
+        data[key] = values.length > 1 ? values.join(', ') : values[0];
+      }
+      data.timestamp = new Date().toISOString();
+
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+
+      // Con mode: 'no-cors' no podemos leer la respuesta, asumimos éxito
+      form.style.transition = 'opacity 0.4s ease';
+      form.style.opacity = '0';
+      setTimeout(() => {
+        form.style.display = 'none';
+        document.getElementById('success').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 400);
+    } catch (err) {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      alert('Hubo un problema al enviar. Inténtalo de nuevo.');
+    }
+  });
+</script>
+</body>
+</html>
